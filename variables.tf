@@ -10,34 +10,28 @@ variable "description" {
   default     = "tf-ecs-rds-redis-description"
 }
 
-variable "available_disk_category" {
-  description = "The specification of available disk category."
-  type        = string
-  default     = "cloud_efficiency"
-}
-
-variable "available_resource_creation" {
-  description = "The specification of available resource creation."
-  type        = string
-  default     = "KVStore"
-}
-
-variable "vpc_cidr_block" {
-  description = "The specification of the vpc cidr block."
-  type        = string
-  default     = "192.168.0.0/16"
-}
-
-variable "vswitch_cidr_block" {
-  description = "The specification of the vswitch cidr block."
-  type        = string
-  default     = "192.168.1.0/24"
-}
-
 variable "instance_type" {
   description = "The specification of the instance type."
   type        = string
   default     = "ecs.n4.large"
+}
+
+variable "availability_zone" {
+  description = "The available zone to launch modules."
+  type        = string
+  default     = ""
+}
+
+variable "vswitch_id" {
+  description = "VSwitch variables, if vswitch_id is empty, then the net_type = classic."
+  type        = string
+  default     = ""
+}
+
+variable "security_group_ids" {
+  description = "A list of security group ids to associate with."
+  type        = list(string)
+  default     = []
 }
 
 variable "system_disk_category" {
@@ -82,12 +76,6 @@ variable "category" {
   default     = "cloud_efficiency"
 }
 
-variable "engine" {
-  description = "The specification of the engine."
-  type        = string
-  default     = "MySQL"
-}
-
 variable "engine_version" {
   description = "The specification of the engine version."
   type        = string
@@ -122,12 +110,6 @@ variable "security_ips" {
   description = "The specification of the security ips."
   type        = list(string)
   default     = ["127.0.0.1"]
-}
-
-variable "redis_instance_type" {
-  description = "The specification of the redis instance type."
-  type        = string
-  default     = "Redis"
 }
 
 variable "redis_engine_version" {

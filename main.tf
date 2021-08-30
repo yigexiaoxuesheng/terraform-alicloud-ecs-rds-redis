@@ -1,40 +1,8 @@
-terraform {
-  required_providers {
-    alicloud = {
-      source  = "aliyun/alicloud"
-      version = "1.126.0"
-    }
-  }
-}
-
-data "alicloud_zones" "default" {
-  available_disk_category     = var.available_disk_category
-  available_resource_creation = var.available_resource_creation
-}
-
-resource "alicloud_vpc" "default" {
-  vpc_name   = var.name
-  cidr_block = var.vpc_cidr_block
-}
-
-resource "alicloud_vswitch" "default" {
-  zone_id      = data.alicloud_zones.default.zones[0].id
-  vswitch_name = var.name
-  vpc_id       = alicloud_vpc.default.id
-  cidr_block   = var.vswitch_cidr_block
-}
-
-resource "alicloud_security_group" "default" {
-  vpc_id      = alicloud_vpc.default.id
-  name        = var.name
-  description = var.description
-}
-
 resource "alicloud_instance" "default" {
-  availability_zone          = data.alicloud_zones.default.zones[0].id
+  availability_zone          = var.availability_zone
   instance_name              = var.name
-  security_groups            = alicloud_security_group.default.*.id
-  vswitch_id                 = alicloud_vswitch.default.id
+  security_groups            = var.security_group_ids
+  vswitch_id                 = var.vswitch_id
   instance_type              = var.instance_type
   system_disk_category       = var.system_disk_category
   system_disk_name           = var.system_disk_name
@@ -52,8 +20,8 @@ resource "alicloud_instance" "default" {
 
 resource "alicloud_db_instance" "default" {
   instance_name        = var.name
-  vswitch_id           = alicloud_vswitch.default.id
-  engine               = var.engine
+  vswitch_id           = var.vswitch_id
+  engine               = "MySQL"
   engine_version       = var.engine_version
   instance_type        = var.rds_instance_type
   instance_storage     = var.instance_storage
@@ -62,11 +30,11 @@ resource "alicloud_db_instance" "default" {
 }
 
 resource "alicloud_kvstore_instance" "default" {
-  vswitch_id        = alicloud_vswitch.default.id
-  zone_id           = data.alicloud_zones.default.zones[0].id
+  vswitch_id        = var.vswitch_id
+  zone_id           = var.availability_zone
   db_instance_name  = var.name
   security_ips      = var.security_ips
-  instance_type     = var.redis_instance_type
+  instance_type     = "Redis"
   engine_version    = var.redis_engine_version
   config            = {
     appendonly = var.redis_appendonly,lazyfree-lazy-eviction = var.redis_lazyfree_lazy_eviction,
