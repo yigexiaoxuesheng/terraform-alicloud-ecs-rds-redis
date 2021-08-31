@@ -1,18 +1,5 @@
-variable "region" {
-  default = "cn-shenzhen"
-}
-
-variable "profile" {
-  default = "default"
-}
-
 variable "name" {
   default = "terraform_test"
-}
-
-provider "alicloud" {
-  region  = var.region
-  profile = var.profile
 }
 
 data "alicloud_zones" "default" {
