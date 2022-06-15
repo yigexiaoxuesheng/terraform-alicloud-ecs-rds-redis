@@ -1,3 +1,6 @@
+provider "alicloud" {
+  region = "cn-shenzhen"
+}
 data "alicloud_resource_manager_resource_groups" "default" {
 }
 
